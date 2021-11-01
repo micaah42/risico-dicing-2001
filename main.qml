@@ -4,6 +4,8 @@ import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 
 Window {
+    width: 520
+    height: 232
     visible: true
     title: qsTr("Riscy Dicer")
 
@@ -11,6 +13,7 @@ Window {
         // Attacker Dices
         ColumnLayout {
             Label {
+                Layout.alignment: Qt.AlignHCenter
                 text: qsTr("Attacker")
             }
             RowLayout {
@@ -24,14 +27,15 @@ Window {
 
         // Spacer
         Rectangle {
-            height: parent.height
-            width: 5
+            Layout.preferredHeight: parent.height
+            Layout.preferredWidth: 5
             color: "#000000"
         }
 
         // Defender Dices
         ColumnLayout {
             Label {
+                Layout.alignment: Qt.AlignHCenter
                 text: qsTr("Defender")
             }
             RowLayout {
