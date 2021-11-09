@@ -5,17 +5,17 @@ import QtQuick.Controls 2.0
 Rectangle {
     width: frame.implicitWidth + 10
     height: frame.implicitHeight + 10
-    property alias count: view.currentIndex
+    property int count:  view.model[view.currentIndex];
 
     function rollDice() {
-        count = Math.floor(Math.random()*view.model.length);
+        view.currentIndex = Math.floor(Math.random()*view.model.length);
     }
 
     Component {
         id: delegateComponent
 
         Label {
-            text: modelData % 6 + 1;
+            text: modelData;
             opacity: 1.0 - Math.abs(Tumbler.displacement) / (Tumbler.tumbler.visibleItemCount / 2)
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
@@ -32,8 +32,8 @@ Rectangle {
             id: view
             model: {
                 var items = [];
-                for (var i = 1; i < 1 + 6 * 10; i++) {
-                    items.push(i);
+                for (var i = 0; i < 1 + 6 * 10; i++) {
+                    items.push(i % 6 + 1);
                 }
                 return items;
             }

@@ -65,13 +65,13 @@ Window {
                     // evaluate
                     var attackerCounts = [];
                     for (i = 0; i < attackerDices.count; i++) {
-                        attackerCounts.push(attackerDices.itemAt(i).count % 6);
+                        attackerCounts.push(attackerDices.itemAt(i).count);
                     }
                     attackerCounts.sort(function(a,b) { return b - a; });
 
                     var defenderCounts = [];
                     for (i = 0; i < defenderDices.count; i++) {
-                        defenderCounts.push(defenderDices.itemAt(i).count % 6);
+                        defenderCounts.push(defenderDices.itemAt(i).count);
                     }
                     defenderCounts.sort(function(a,b) { return b - a; });
 
