@@ -10,7 +10,7 @@ Item {
     property alias redrawInterval: redrawTimer.interval
 
     property int minRedraws: 6
-    property int maxRedraws: 24
+    property int maxRedraws: 12
     property var nextDice: null
 
     signal rollFinished();

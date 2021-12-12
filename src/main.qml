@@ -5,45 +5,79 @@ import QtQuick.Layouts 1.12
 
 Window {
     id: window
-    width: 520
-    height: 232
+    width: 840
+    height: 400
     visible: true
     title: qsTr("Riscy Dicer")
-    color: "#ededed"
 
     RowLayout {
-        x:5; y:x;
-        // Attacker Dices
-        ColumnLayout {
-            Layout.preferredWidth: 300
+        x:15; y:x;
+        anchors.fill: parent
 
-            DiceGroup {
-                id: attackerDices
-                name: qsTr("Attacker")
-                Layout.preferredHeight: 90
-                numDices: 3
-            }
+        // Dices
+        Rectangle {
+            Layout.preferredWidth: parent.width / 3
+            Layout.fillHeight: true
+            color: "#ededed"
 
-            DiceGroup {
-                id: defenderDices
-                name: qsTr("Defender")
-                Layout.preferredHeight: 90
-                numDices: 2
+            ColumnLayout {
+                anchors.fill: parent
+
+                DiceGroup {
+                    id: attackerDices
+                    Layout.preferredHeight: 90
+                    name: qsTr("Attacker")
+                    numDices: 3
+
+                    onRollFinished: {
+                        if (!defenderDices.rolling)
+                            scoreBox.update(attackerDices.counts(), defenderDices.counts())
+                    }
+                }
+
+                DiceGroup {
+                    id: defenderDices
+                    Layout.preferredHeight: 90
+                    name: qsTr("Defender")
+                    numDices: 2
+
+                    onRollFinished: {
+                        if (!defenderDices.rolling)
+                            scoreBox.update(attackerDices.counts(), defenderDices.counts())
+                    }
+                }
+
+                Item {
+                    Layout.fillHeight: true
+                }
             }
         }
 
-        // Result
-        ColumnLayout {
-            ScoreBox {
-                id: scoreBox
-                Layout.fillHeight: true
-            }
 
-            Button {
-                text: qsTr("Roll the Dices!")
-                onClicked: {
-                    attackerDices.roll();
-                    defenderDices.roll();
+
+
+        // Result
+        Rectangle {
+            Layout.preferredWidth: 2 * parent.width / 3
+            Layout.fillHeight: true
+            color: "#cdcdcd"
+
+            ColumnLayout {
+                anchors.fill: parent
+
+                ScoreBox {
+                    id: scoreBox
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                }
+
+                Button {
+                    Layout.fillWidth: true
+                    text: qsTr("Roll the Dices!")
+                    onClicked: {
+                        attackerDices.roll();
+                        defenderDices.roll();
+                    }
                 }
             }
         }

@@ -3,9 +3,10 @@ import QtQuick.Layouts 1.12
 
 Item {
     id: ctrl
-    property alias name: nameText.text
+    property alias name: nameCenteredText.text
     property alias numDices: layout.model
     property bool rolling: false
+    property int rollTime: 750
 
 
     function roll() {
@@ -22,14 +23,17 @@ Item {
         return counts.sort(function(a, b) { return b - a; });
     }
 
-    Column {
-        Text { id: nameText }
+    ColumnLayout {
+        CenteredText { id: nameCenteredText }
         Row {
             spacing: 10
+            Layout.fillHeight: true
 
             Repeater {
                 id: layout
                 delegate: Dice {
+                    redrawInterval: 50
+
                     onRollFinished: {
                         if (index === layout.model - 1) {
                             console.log ('finished!');
