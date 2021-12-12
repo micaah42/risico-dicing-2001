@@ -56,7 +56,7 @@ Window {
 
 
 
-        // Result
+        // Result & Buttons
         Rectangle {
             Layout.preferredWidth: 2 * parent.width / 3
             Layout.fillHeight: true
@@ -71,12 +71,23 @@ Window {
                     Layout.fillHeight: true
                 }
 
-                Button {
+                Row {
                     Layout.fillWidth: true
-                    text: qsTr("Roll the Dices!")
-                    onClicked: {
-                        attackerDices.roll();
-                        defenderDices.roll();
+                    Button {
+                        width: 2 * parent.width / 3
+                        text: qsTr("Roll")
+                        onClicked: {
+                            attackerDices.roll();
+                            defenderDices.roll();
+                        }
+                    }
+                    Button {
+                        width: parent.width / 3
+                        text: "Finish Turn"
+                        highlighted: true
+                        onClicked: {
+                            scoreBox.resetScore();
+                        }
                     }
                 }
             }

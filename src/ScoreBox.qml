@@ -39,6 +39,19 @@ Item {
         console.log(JSON.stringify(totalLosses));
     }
 
+    function resetScore() {
+        scoreList.model = 0
+        scores = [];
+
+        totalLosses = {
+            'attackers': 0,
+            'defenders': 0
+        }
+        attackerLosses.text = 0;
+        defenderLosses.text = 0;
+
+    }
+
 
     ColumnLayout {
         anchors.fill: parent
@@ -70,7 +83,7 @@ Item {
             model: 0
             delegate: Rectangle {
                 color: index % 2 ? "#cdcdcd" : "#dadada"
-                Layout.preferredHeight: 12
+                Layout.preferredHeight: 14
                 Layout.fillWidth: true
 
                 Row {
