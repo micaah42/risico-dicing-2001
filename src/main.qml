@@ -74,6 +74,7 @@ Window {
                 Row {
                     Layout.fillWidth: true
                     Button {
+                        enabled: !attackerDices.rolling && !defenderDices.rolling
                         width: 2 * parent.width / 3
                         text: qsTr("Roll")
                         onClicked: {
@@ -82,6 +83,7 @@ Window {
                         }
                     }
                     Button {
+                        enabled: !attackerDices.rolling && !defenderDices.rolling
                         width: parent.width / 3
                         text: "Finish Turn"
                         highlighted: true

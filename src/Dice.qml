@@ -6,51 +6,32 @@ import QtQuick.Layouts 1.12
 Item {
     id: ctrl
     property int size: 65
+    height: size; width: size;
+
     property alias count: faceLayout.currentIndex
     property alias redrawInterval: redrawTimer.interval
 
-    property int minRedraws: 6
-    property int maxRedraws: 12
-    property var nextDice: null
-
-    signal rollFinished();
-
-
-    height: size; width: size;
-
-    function roll() {
+    function startRoll() {
         if (redrawTimer.running) {
             console.log('timer already running!')
             return;
         }
-
-        var redraws = minRedraws + Math.floor((maxRedraws - minRedraws) * Math.random())
-        redrawTimer.redrawTarget = redraws;
         redrawTimer.start();
+    }
+
+    function stopRoll() {
+        redrawTimer.stop();
     }
 
     Timer {
         id: redrawTimer
         interval: 75
-        property int redraws: 0
-        property int redrawTarget: 0
-
         repeat: true
 
         onTriggered: {
-            if (redraws == redrawTarget) {
-                redrawTimer.stop()
-                redraws = 0;
-
-                rollFinished();
-                if (nextDice) nextDice.roll();
-                return;
-            }
-
             var curr = faceLayout.currentIndex ;
             var next = (curr + 1) % 6
             faceLayout.currentIndex = next;
-            redraws++;
         }
     }
 

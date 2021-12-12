@@ -6,16 +6,45 @@ Item {
     property alias name: nameCenteredText.text
     property alias numDices: layout.model
     property bool rolling: false
-    property int rollTime: 750
+
+    property int avgRollTime: 750
+    property int rollTimeVariance: 250
 
 
     function roll() {
         console.log('rolling ...');
-        layout.itemAt(0).roll();
+        for (var i = 0; i < numDices; i++) {
+            layout.itemAt(i).startRoll();
+        }
+
+        stopTimer.start();
         rolling = true;
     }
 
+    Timer {
+        id: stopTimer
+        property int toStop: 0
+        repeat: false
+
+        onTriggered: {
+            if(toStop < numDices) {
+                layout.itemAt(toStop).stopRoll()
+                toStop++
+
+                stopTimer.interval = (avgRollTime +  (Math.random() - 0.5) * rollTimeVariance)
+                stopTimer.start();
+            }
+            else {
+                toStop = 0;
+                ctrl.rollFinished();
+                ctrl.rolling = false;
+                console.log('finished!');
+            }
+        }
+    }
+
     signal rollFinished()
+
     function counts() {
         var counts = [];
         for (var i = 0; i < layout.model; i++)
@@ -33,17 +62,6 @@ Item {
                 id: layout
                 delegate: Dice {
                     redrawInterval: 50
-
-                    onRollFinished: {
-                        if (index === layout.model - 1) {
-                            console.log ('finished!');
-                            ctrl.rollFinished();
-                            rolling = false;
-                        }
-                        else {
-                            layout.itemAt(index + 1).roll();
-                        }
-                    }
                 }
                 model: 3
             }
