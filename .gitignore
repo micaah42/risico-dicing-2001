@@ -4,6 +4,9 @@
 # User specific items
 *.pro.user
 
+# Build Directories
+build-*
+
 # Compiled Object files
 *.slo
 *.lo
