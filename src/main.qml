@@ -4,101 +4,47 @@ import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 
 Window {
+    id: window
     width: 520
     height: 232
     visible: true
     title: qsTr("Riscy Dicer")
+    color: "#ededed"
 
     RowLayout {
+        x:5; y:x;
         // Attacker Dices
         ColumnLayout {
-            Label {
-                Layout.alignment: Qt.AlignHCenter
-                text: qsTr("Attacker")
-            }
-            RowLayout {
-                Repeater {
-                    id: attackerDices
-                    delegate: DiceView {}
-                    model: 3
-                }
-            }
-        }
+            Layout.preferredWidth: 300
 
-        // Spacer
-        Rectangle {
-            Layout.preferredHeight: parent.height
-            Layout.preferredWidth: 5
-            color: "#000000"
-        }
-
-        // Defender Dices
-        ColumnLayout {
-            Label {
-                Layout.alignment: Qt.AlignHCenter
-                text: qsTr("Defender")
+            DiceGroup {
+                id: attackerDices
+                name: qsTr("Attacker")
+                Layout.preferredHeight: 90
+                numDices: 3
             }
-            RowLayout {
-                Repeater {
-                    id: defenderDices
-                    delegate: DiceView {}
-                    model: 2
-                }
+
+            DiceGroup {
+                id: defenderDices
+                name: qsTr("Defender")
+                Layout.preferredHeight: 90
+                numDices: 2
             }
         }
 
         // Result
         ColumnLayout {
+            ScoreBox {
+                id: scoreBox
+                Layout.fillHeight: true
+            }
+
             Button {
                 text: qsTr("Roll the Dices!")
                 onClicked: {
-                    var i;
-                    // roll attacker dices
-                    for (i = 0; i < attackerDices.count; i++) {
-                        attackerDices.itemAt(i).rollDice();
-                    }
-                    // roll defender dices
-                    for (i = 0; i < defenderDices.count; i ++) {
-                        defenderDices.itemAt(i).rollDice();
-                    }
-
-                    // evaluate
-                    var attackerCounts = [];
-                    for (i = 0; i < attackerDices.count; i++) {
-                        attackerCounts.push(attackerDices.itemAt(i).count);
-                    }
-                    attackerCounts.sort(function(a,b) { return b - a; });
-
-                    var defenderCounts = [];
-                    for (i = 0; i < defenderDices.count; i++) {
-                        defenderCounts.push(defenderDices.itemAt(i).count);
-                    }
-                    defenderCounts.sort(function(a,b) { return b - a; });
-
-                    console.log(JSON.stringify(attackerCounts));
-                    console.log(JSON.stringify(defenderCounts));
-
-                    var attLost = 0;
-                    var defLost = 0;
-                    for (i = 0; i < defenderDices.count; i++) {
-                        if (defenderCounts[i] < attackerCounts[i])
-                            defLost++;
-                        else
-                            attLost++;
-                    }
-                    attackersLost.text = attLost;
-                    defendersLost.text = defLost;
+                    attackerDices.roll();
+                    defenderDices.roll();
                 }
-            }
-
-            RowLayout {
-                Label { text: qsTr("Attackers Lost:") }
-                Label { id: attackersLost }
-            }
-
-            RowLayout {
-                Label { text: qsTr("Defenders Lost:") }
-                Label { id: defendersLost }
             }
         }
     }

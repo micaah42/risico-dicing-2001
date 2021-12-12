@@ -5,13 +5,15 @@ import QtQuick.Layouts 1.12
 
 Item {
     id: ctrl
-    property int size: 100
+    property int size: 65
     property alias count: faceLayout.currentIndex
     property alias redrawInterval: redrawTimer.interval
 
     property int minRedraws: 6
     property int maxRedraws: 24
     property var nextDice: null
+
+    signal rollFinished();
 
 
     height: size; width: size;
@@ -24,14 +26,12 @@ Item {
 
         var redraws = minRedraws + Math.floor((maxRedraws - minRedraws) * Math.random())
         redrawTimer.redrawTarget = redraws;
-
-        console.log('rolling ...')
         redrawTimer.start();
     }
 
     Timer {
         id: redrawTimer
-        interval: 150
+        interval: 75
         property int redraws: 0
         property int redrawTarget: 0
 
@@ -42,6 +42,7 @@ Item {
                 redrawTimer.stop()
                 redraws = 0;
 
+                rollFinished();
                 if (nextDice) nextDice.roll();
                 return;
             }

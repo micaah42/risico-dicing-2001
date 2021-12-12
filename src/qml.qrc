@@ -1,6 +1,9 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>DiceView.qml</file>
+        <file>Dice.qml</file>
+        <file>DiceFace.qml</file>
+        <file>DiceGroup.qml</file>
+        <file>ScoreBox.qml</file>
     </qresource>
 </RCC>
