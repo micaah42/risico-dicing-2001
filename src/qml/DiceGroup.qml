@@ -3,15 +3,16 @@ import QtQuick.Layouts 1.12
 
 Item {
     id: ctrl
-    implicitWidth: childrenRect.width
-    implicitHeight: childrenRect.height
-    property alias numDices: layout.model
+
     property bool rolling: false
     property bool isAttacker: true
 
-    property int avgRollTime: 750
-    property int rollTimeVariance: 250
+    property int numDices: isAttacker ? 3 : 2
+    property int avgRollTime: 500
+    property int rollTimeVariance: 450
 
+    implicitWidth: childrenRect.width
+    implicitHeight: childrenRect.height
 
     function roll() {
         console.log('rolling ...');
@@ -56,13 +57,14 @@ Item {
 
 
     Row {
-        spacing: 10
+        spacing: 25
         Repeater {
             id: layout
             delegate: Dice {
+                isAttacker: ctrl.isAttacker
                 redrawInterval: 50
             }
-            model: 3
+            model: isAttacker ? 3 : 2
         }
     }
 }

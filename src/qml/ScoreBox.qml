@@ -1,14 +1,14 @@
-import QtQuick 2.0
-import QtQuick.Controls 2.12
-import QtQuick.Layouts 1.12
+import QtQuick 2.15
+import QtQuick.Controls 2.15
+import QtQuick.Layouts 1.15
+import risiko.style 1.0
 
 Item {
     id: ctrl
-    property var scores: []
-    property var totalLosses: {
-        "attackers": 0,
-        "defenders": 0
-    }
+
+    property int attackersLost: 0
+    property int defendersLost: 0
+
 
     function update(attackerCounts, defenderCounts) {
         console.log(attackerCounts, defenderCounts)
@@ -21,45 +21,37 @@ Item {
                 attLost++;
         }
 
-        var score = {
-            'attackers': attLost,
-            'defenders': defLost
-        };
+        attackersLost += attLost;
+        defendersLost += defLost;
 
-        totalLosses['attackers'] += score['attackers'];
-        attackerLosses.text = totalLosses['attackers'];
+        scores.append({
+                          'attackers': attLost,
+                          'defenders': defLost
+                      });
 
-        totalLosses['defenders'] += score['defenders'];
-        defenderLosses.text = totalLosses['defenders'];
-
-        scores.push(score);
-        scoreList.model = scores.length
-
-        console.log(JSON.stringify(score));
-        console.log(JSON.stringify(totalLosses));
+        scoresView.positionViewAtEnd();
     }
 
     function resetScore() {
-        scoreList.model = 0
-        scores = [];
-
-        totalLosses = {
-            'attackers': 0,
-            'defenders': 0
-        }
-        attackerLosses.text = 0;
-        defenderLosses.text = 0;
-
+        attackersLost = 0;
+        defendersLost = 0;
+        scores.clear();
     }
 
+    ListModel {
+        id: scores
+    }
 
-    ColumnLayout {
+    ListView {
+        id: scoresView
         anchors.fill: parent
+        model: scores
 
-        Rectangle {
-            color: "#8f8f8f"
-            Layout.preferredHeight: 25
-            Layout.fillWidth: true
+        headerPositioning: ListView.OverlayHeader
+        header: Rectangle {
+            width: parent.width
+            height: 25
+            color: "transparent"
 
             Row {
                 anchors.fill: parent
@@ -67,61 +59,66 @@ Item {
                     font.pixelSize: 20
                     font.bold: true
                     width: parent.width / 2
-                    text: qsTr("Attackers")
+                    text: qsTr("ATTACKER")
+                    color: Theme.attackerColor
                 }
                 CenteredText {
                     font.pixelSize: 20
                     font.bold: true
                     width: parent.width / 2
-                    text: qsTr("Defenders")
+                    text: qsTr("DEFENDER")
+                    color: Theme.defenderColor
                 }
             }
         }
 
-        Repeater {
-            id: scoreList
-            model: 0
-            delegate: Rectangle {
-                color: index % 2 ? "#cdcdcd" : "#dadada"
-                Layout.preferredHeight: 14
-                Layout.fillWidth: true
+        delegate: Rectangle {
+            color: index % 2 ? "#222222" : "#2f2f2f"
+            width: parent.width
+            radius: 1.5
+            height: 20
 
-                Row {
-                    anchors.fill: parent
-                    CenteredText {
-                        width: parent.width / 2
-                        text: scores[index]['attackers']
-                    }
-                    CenteredText {
-                        width: parent.width / 2
-                        text: scores[index]['defenders']
-                    }
-                }
-            }
-        }
-
-        Item {
-            Layout.fillHeight: true
-        }
-
-        Rectangle {
-            color: "#8f8f8f"
-            Layout.preferredHeight: 25
-            Layout.fillWidth: true
             Row {
-                anchors.fill: parent
+                width: parent.width
+                anchors.verticalCenter: parent.verticalCenter
+
                 CenteredText {
-                    id: attackerLosses
-                    font.pixelSize: 20
-                    font.bold: true
                     width: parent.width / 2
-                    text: totalLosses['attackers']
+                    text: attackers
+                    color: "#cdcdcd"
                 }
                 CenteredText {
-                    id: defenderLosses
+                    width: parent.width / 2
+                    text: defenders
+                    color: "#cdcdcd"
+                }
+            }
+        }
+
+        footerPositioning: ListView.OverlayFooter
+        footer: Rectangle {
+            color: "#424242"
+            width: parent.width
+            height: 25
+            radius: 1.5
+
+            Row {
+                width: parent.width
+                anchors.verticalCenter: parent.verticalCenter
+
+                CenteredText {
                     font.pixelSize: 20
                     font.bold: true
+                    color: Theme.orangeAccent
                     width: parent.width / 2
+                    text: attackersLost
+                }
+                CenteredText {
+                    font.pixelSize: 20
+                    font.bold: true
+                    color: Theme.orangeAccent
+                    width: parent.width / 2
+                    text: defendersLost
                 }
             }
         }

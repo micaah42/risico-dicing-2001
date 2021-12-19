@@ -1,5 +1,8 @@
+#include <QFont>
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+
+#include "theme.h"
 
 int main(int argc, char *argv[])
 {
@@ -8,17 +11,20 @@ int main(int argc, char *argv[])
 #endif
 
     QGuiApplication app(argc, argv);
+    QGuiApplication::setFont(QFont("Monospace"));
+    qInfo() << QFont::substitutions();
+
+    qmlRegisterSingletonType<Theme>("risiko.style", 1, 0, "Theme", themeSingletonProvider);
+
 
     QQmlApplicationEngine engine;
-    const QUrl url(QStringLiteral("qrc:/main.qml"));
+    const QUrl url("qrc:/qml/main.qml");
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
                      &app, [url](QObject *obj, const QUrl &objUrl) {
         if (!obj && url == objUrl)
             QCoreApplication::exit(-1);
     }, Qt::QueuedConnection);
     engine.load(url);
-
-    qmlRegisterSingletonType(QUrl("file://home/michael/risiko/risiko-dicing/src/Palette.qml"), "nw.risiko.dicing.style", 1, 0, "Palette" );
 
     return app.exec();
 }

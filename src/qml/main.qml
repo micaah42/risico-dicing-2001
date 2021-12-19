@@ -3,14 +3,16 @@ import QtQuick.Window 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 import QtQuick.Shapes 1.12
+import risiko.style 1.0
 
-Window {
+ApplicationWindow {
     id: window
     width: 840
     height: 400
     visible: true
     title: qsTr("Risik0 Dicing 2001")
     color: "#000000"
+
 
     RowLayout {
         anchors.fill: parent
@@ -21,20 +23,20 @@ Window {
         Rectangle {
             Layout.preferredWidth: 420
             Layout.fillHeight: true
-            color: "#333333"
+            color: "#222222"
             radius: 5
 
             ColumnLayout {
                 anchors.fill: parent
                 anchors.margins: 10
+                spacing: 15
 
                 Text {
                     text: qsTr("ATTACKER")
                     Layout.alignment: Qt.AlignLeft
-                    font.bold: true
-                    font.pixelSize: 50
-                    color: Palette.attackerColor
-
+                    font.weight: Font.ExtraBold
+                    font.pixelSize: 32
+                    color: Theme.attackerColor
                 }
 
                 Item {
@@ -44,7 +46,7 @@ Window {
                 DiceGroup {
                     id: attackerDices
                     Layout.alignment: Qt.AlignHCenter
-                    numDices: 3
+                    isAttacker: true
                     onRollFinished: {
                         if (!defenderDices.rolling)
                             scoreBox.update(attackerDices.counts(), defenderDices.counts())
@@ -54,13 +56,13 @@ Window {
                 // seperator line
                 ComicSeperator {
                     Layout.fillWidth: true
-                    Layout.preferredHeight: 15
+                    Layout.preferredHeight: 11
                 }
 
                 DiceGroup {
                     id: defenderDices
                     Layout.alignment: Qt.AlignHCenter
-                    numDices: 2
+                    isAttacker: false
                     onRollFinished: {
                         if (!defenderDices.rolling)
                             scoreBox.update(attackerDices.counts(), defenderDices.counts())
@@ -74,10 +76,9 @@ Window {
                 Text {
                     text: qsTr("DEFENDER")
                     Layout.alignment: Qt.AlignRight
-                    font.bold: true
-                    font.pixelSize: 50
-                    color: Palette.orangeColor
-
+                    font.weight: Font.ExtraBold
+                    font.pixelSize: 32
+                    color: Theme.defenderColor
                 }
             }
         }
@@ -89,10 +90,13 @@ Window {
         Rectangle {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            color: "#cdcdcd"
+            color: "#222222"
+            radius: 5
+            clip: true
 
             ColumnLayout {
                 anchors.fill: parent
+                anchors.margins: 10
 
                 ScoreBox {
                     id: scoreBox
@@ -100,21 +104,29 @@ Window {
                     Layout.fillHeight: true
                 }
 
-                Row {
+                RowLayout {
                     Layout.fillWidth: true
-                    Button {
+                    // Layout.preferredHeight: 100
+                    spacing: 5
+
+                    ComicButton {
                         enabled: !attackerDices.rolling && !defenderDices.rolling
-                        width: 2 * parent.width / 3
+                        Layout.preferredWidth: 2 * parent.width / 3
+                        //Layout.fillHeight: true
+
                         text: qsTr("Roll")
                         onClicked: {
                             attackerDices.roll();
                             defenderDices.roll();
                         }
                     }
-                    Button {
+
+                    ComicButton {
                         enabled: !attackerDices.rolling && !defenderDices.rolling
-                        width: parent.width / 3
-                        text: "Finish Turn"
+                        Layout.fillWidth: true
+                        //Layout.fillHeight: true
+
+                        text: qsTr("End Turn")
                         highlighted: true
                         onClicked: {
                             scoreBox.resetScore();
