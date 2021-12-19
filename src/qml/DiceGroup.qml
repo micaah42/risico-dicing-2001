@@ -3,9 +3,11 @@ import QtQuick.Layouts 1.12
 
 Item {
     id: ctrl
-    property alias name: nameCenteredText.text
+    implicitWidth: childrenRect.width
+    implicitHeight: childrenRect.height
     property alias numDices: layout.model
     property bool rolling: false
+    property bool isAttacker: true
 
     property int avgRollTime: 750
     property int rollTimeVariance: 250
@@ -52,19 +54,15 @@ Item {
         return counts.sort(function(a, b) { return b - a; });
     }
 
-    ColumnLayout {
-        CenteredText { id: nameCenteredText }
-        Row {
-            spacing: 10
-            Layout.fillHeight: true
 
-            Repeater {
-                id: layout
-                delegate: Dice {
-                    redrawInterval: 50
-                }
-                model: 3
+    Row {
+        spacing: 10
+        Repeater {
+            id: layout
+            delegate: Dice {
+                redrawInterval: 50
             }
+            model: 3
         }
     }
 }
