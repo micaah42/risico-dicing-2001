@@ -18,5 +18,7 @@ int main(int argc, char *argv[])
     }, Qt::QueuedConnection);
     engine.load(url);
 
+    qmlRegisterSingletonType(QUrl("file://home/michael/risiko/risiko-dicing/src/Palette.qml"), "nw.risiko.dicing.style", 1, 0, "Palette" );
+
     return app.exec();
 }

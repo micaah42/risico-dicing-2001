@@ -6,5 +6,7 @@
         <file>DiceGroup.qml</file>
         <file>ScoreBox.qml</file>
         <file>CenteredText.qml</file>
+        <file>ComicSeperator.qml</file>
+        <file>Palette.qml</file>
     </qresource>
 </RCC>
